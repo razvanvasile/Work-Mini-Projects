@@ -1,9 +1,9 @@
-# Load the machine
+# Setup
 import pkg_resources
 pkg_resources.require('aphla')
 import aphla as ap
-# Other stuff
-from cothread.catools import caget, caput, ca_nothing
+# Used to extract values off pvs
+from cothread.catools import caget
 
 # Load the machine
 ap.machines.load('SRI21')
@@ -21,6 +21,6 @@ for BPM in range(len(BPMS)):
 # Third task
 QUADS = ap.getElements('QUAD')
 
-print('String values for the setpoint currents')
-#for QUAD in range(len(QUADS)):
-#    print(caget(QUADS[QUAD].pv(handle='readback')))
+print('String values for the setpoint currents:')
+for key in range(len(QUADS)):
+    print(caget(QUADS[key].pv(handle='readback')))
