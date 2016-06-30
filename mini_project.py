@@ -15,8 +15,8 @@ print('There are {} BPM elements in the machine.'.format(len(BPMS)))
 # Second task
 print('A list of all the PV names for all BPMS')
 for BPM in range(len(BPMS)):
- #   print(BPMS[BPM].pv())
-    print caget(BPMS[BPM].pv())
+    pvs = BPMS[BPM].pv()
+    print('PV names: {}  PV values: {}'.format(pvs, caget(pvs)))
 
 # Third task
 QUADS = ap.getElements('QUAD')
