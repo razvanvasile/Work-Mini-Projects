@@ -6,10 +6,10 @@ import aphla as ap
 # Load the machine
 ap.machines.load('SRI21')
 
-myLattice = ap.machines.getLattice()
+my_lattice = ap.machines.getLattice()
 
 length = 0
-for key in range(myLattice.size()):
-    length += myLattice[key].length
+for key in range(my_lattice.size()):
+    length += my_lattice[key].length
 
 print "The length of the lattice is {}.".format(length)
