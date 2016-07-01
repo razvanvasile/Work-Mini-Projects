@@ -26,22 +26,18 @@ for family in family_dict.keys():
 
 
 # Part 2 - all the groups associated with each family
-groups_dict = {}
+my_dict = {}
 
 # Initialize the dictionary
-for key in range(my_lattice.size()):
-    element = my_lattice[key]
-    groups_dict[element] = set()
+for element in my_lattice.getElementList('*'):
+    my_dict[element.family] = set()
 
 # Do the union between each entry in the dictionary
 # and each element
-for key in range(my_lattice.size()):
-    element = my_lattice[key]
-    groups_dict[element] = groups_dict[element].union(element.group)
+for element in my_lattice.getElementList('*'):
+    my_dict[element.family] = my_dict[element.family].union(element.group)
 
 # Print the set of groups for each entry
-for key in range(my_lattice.size()):
-    element = my_lattice[key]
-    print "Element {}, related groups {}".format(
-        element.family, groups_dict[element])
-    
+for element in my_dict.keys():
+    print "Family {}, related groups {}".format(
+        element, my_dict[element])
