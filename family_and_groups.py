@@ -30,6 +30,7 @@ for key in range(my_lattice.size()):
         family_count[element.family])
 
 
+
 # Part 2 - all the groups associated with each family
 groups_dict = {}
 
