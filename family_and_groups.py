@@ -5,30 +5,24 @@ import aphla as ap
 
 # Load the machine
 ap.machines.load('SRI21')
-
 my_lattice = ap.machines.getLattice()
 
+# Part 1 - count the number of entries in each family
 # Create a dictionary to store a count for each family
-family_count = {}
+family_dict = {}
 
-# Part 1
 # Initialize the dictionary
-for key in range(my_lattice.size()):
-    element = my_lattice[key]
-    family_count[element.family] = 0
+for element in my_lattice.getElementList('*'):
+    family_dict[element.family] = 0
 
 # Find the number of objects existant in each family
-for key in range(my_lattice.size()):
-    element = my_lattice[key]
-    family_count[element.family] += 1
+for element in my_lattice.getElementList('*'):
+    family_dict[element.family] += 1
 
 # Print count of each family
-for key in range(my_lattice.size()):
-    element = my_lattice[key]
-    print "Family {}, count {}".format(
-        element.family, 
-        family_count[element.family])
-
+for family in family_dict.keys():
+    print "Family {}, count {}".format(family,
+                                       family_dict[family])
 
 
 # Part 2 - all the groups associated with each family
