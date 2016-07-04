@@ -71,7 +71,17 @@ def pvXYSbValuesWithCAGet(BPMS):
     return xBPMValues, yBPMValues, sbBPMValues
 
 
+print 'Timeit for pvXYSbValues'
+start = timeit.timeit()
+xBPMValues, yBPMValues, sbBPMValues = pvXYSbValues(BPMS)
+end = timeit.timeit()
+print (end - start)
+
+print 'Timeit for pvXYSbValues with caget'
+start = timeit.timeit()
 xBPMValues, yBPMValues, sbBPMValues = pvXYSbValuesWithCAGet(BPMS)
+end = timeit.timeit()
+print (end - start)
 
 p.ylabel('X/Y BPM Values')
 p.xlabel('SB BPM Values')
