@@ -39,11 +39,39 @@ def pvXYSbValues(BPMS):
     
     return xBPMValues, yBPMValues, sbBPMValues
 
-print 'Timeit for pvXYSbValues'
-start = timeit.timeit()
-xBPMValues, yBPMValues, sbBPMValues = pvXYSbValues(BPMS)
-end = timeit.timeit()
-print (end - start)
+''' Method to return lists of values for x, y and sb properties of a BPM 
+    using caget '''
+def pvXYSbValuesWithCAGet(BPMS):
+    xBPMValues = list()
+    yBPMValues = list()
+    sbBPMValues = list()
+    
+    for BPM in range(len(BPMS)):
+        # Check if the PV is enabled
+        pvValue = BPMS[BPM].pv()
+        if ':SA:Y' in pvValue[0]:
+            pvEnabled = BPMS[BPM].pv()[0].replace(':SA:Y', ':CF:ENABLED_S')
+        else:
+            pvEnabled = BPMS[BPM].pv()[0].replace(':SA:X', ':CF:ENABLED_S')
+
+        # Check if the pv is enabled
+        if(caget(pvEnabled)):
+            # Get its value and store it in the list
+            if ':Y' in pvValue[0]:
+                yBPMValues.append(caget(pvValue[0]))
+                xBPMValues.append(caget(pvValue[1]))
+                sbBPMValues.append(BPMS[BPM].sb)
+            else:
+                xBPMValues.append(caget(pvValue[0]))
+                yBPMValues.append(caget(pvValue[1]))
+                sbBPMValues.append(BPMS[BPM].sb)
+        else:
+            print "Found a pv value which is not enabled"
+
+    return xBPMValues, yBPMValues, sbBPMValues
+
+
+xBPMValues, yBPMValues, sbBPMValues = pvXYSbValuesWithCAGet(BPMS)
 
 p.ylabel('X/Y BPM Values')
 p.xlabel('SB BPM Values')
