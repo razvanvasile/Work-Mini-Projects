@@ -27,7 +27,7 @@ for element in elements:
     if (len(pvs) > 0):
         pv_name = pvs[0].split(':')[0]
         vmx_pvs.add(pv_name)
-    
+
 print 'All PVs in \'SRI21\' that are not in \'VMX\''
 print sri21_pvs - vmx_pvs
 print 'Total difference: ', len(sri21_pvs - vmx_pvs)
