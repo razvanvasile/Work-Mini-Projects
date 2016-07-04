@@ -1,10 +1,9 @@
 import pkg_resources
-from timeit import timeit
 pkg_resources.require('aphla')
 pkg_resources.require('matplotlib')
 import aphla as ap
 import matplotlib.pyplot as p
-import timeit
+import time
 from cothread.catools import caget, caput
 
 
@@ -15,72 +14,73 @@ ap.machines.load('SRI21')
 BPMS = ap.getElements('BPM')
 
 ''' Method to return lists of values for x, y and sb properties of a BPM '''
-def pvXYSbValues(BPMS):
-    xBPMValues = list()
-    yBPMValues = list()
-    sbBPMValues = list()
+def pv_xysb_values(BPMS):
+    x_bpm_values = list()
+    y_bpm_values = list()
+    sb_bpm_values = list()
     
-    for BPM in range(len(BPMS)):
+    for BPM in BPMS:
         # Check if the PV is enabled
-        pvValue = BPMS[BPM].pv()
-        if ':SA:Y' in pvValue[0]:
-            pvEnabled = BPMS[BPM].pv()[0].replace(':SA:Y', ':CF:ENABLED_S')
+        pvs = BPM.pv()
+        if ':SA:Y' in pvs[0]:
+            pvEnabled = BPM.pv()[0].replace(':SA:Y', ':CF:ENABLED_S')
         else:
-            pvEnabled = BPMS[BPM].pv()[0].replace(':SA:Y', ':CF:ENABLED_S')
+            pvEnabled = BPM.pv()[0].replace(':SA:X', ':CF:ENABLED_S')
         
         # Check if the pv is enabled
         if(caget(pvEnabled)):
             # Get its value and store it in the list
-            xBPMValues.append(BPMS[BPM].get('x', handle='readback'))
-            yBPMValues.append(BPMS[BPM].get('y', handle='readback'))
-            sbBPMValues.append(BPMS[BPM].sb)
+            x_bpm_values.append(BPM.get('x', handle='readback'))
+            y_bpm_values.append(BPM.get('y', handle='readback'))
+            sb_bpm_values.append(BPM.sb)
         else:
             print 'Found a BPM which is not enabled'
     
-    return xBPMValues, yBPMValues, sbBPMValues
+    return x_bpm_values, y_bpm_values, sb_bpm_values
 
 ''' Method to return lists of values for x, y and sb properties of a BPM 
     using caget '''
 def pvXYSbValuesWithCAGet(BPMS):
-    xBPMValues = list()
-    yBPMValues = list()
-    sbBPMValues = list()
+    x_bpm_values = list()
+    y_bpm_values = list()
+    sb_bpm_values = list()
     
-    for BPM in range(len(BPMS)):
-        # Check if the PV is enabled
-        pvValue = BPMS[BPM].pv()
-        if ':SA:Y' in pvValue[0]:
-            pvEnabled = BPMS[BPM].pv()[0].replace(':SA:Y', ':CF:ENABLED_S')
+    for BPM in BPMS:
+        pvs = BPM.pv()
+        if ':SA:Y' in pvs[0]:
+            pvEnabled = BPM.pv()[0].replace(':SA:Y', ':CF:ENABLED_S')
         else:
-            pvEnabled = BPMS[BPM].pv()[0].replace(':SA:X', ':CF:ENABLED_S')
+            pvEnabled = BPM.pv()[0].replace(':SA:X', ':CF:ENABLED_S')
 
         # Check if the pv is enabled
         if(caget(pvEnabled)):
             # Get its value and store it in the list
-            if ':Y' in pvValue[0]:
-                yBPMValues.append(caget(pvValue[0]))
-                xBPMValues.append(caget(pvValue[1]))
-                sbBPMValues.append(BPMS[BPM].sb)
+            if ':Y' in pvs[0]:
+                y_bpm_values.append(pvs[0])
+                x_bpm_values.append(pvs[1])
+                sb_bpm_values.append(BPM.sb)
             else:
-                xBPMValues.append(caget(pvValue[0]))
-                yBPMValues.append(caget(pvValue[1]))
-                sbBPMValues.append(BPMS[BPM].sb)
+                x_bpm_values.append(pvs[0])
+                y_bpm_values.append(pvs[1])
+                sb_bpm_values.append(BPM.sb)
         else:
             print "Found a pv value which is not enabled"
+    
+    x_bpm_values = caget(x_bpm_values)
+    y_bpm_values = caget(y_bpm_values)
 
-    return xBPMValues, yBPMValues, sbBPMValues
-
+    return x_bpm_values, y_bpm_values, sb_bpm_values
 
 print 'Timeit for pvXYSbValues'
-start = timeit.timeit()
-xBPMValues, yBPMValues, sbBPMValues = pvXYSbValues(BPMS)
-end = timeit.timeit()
+start = time.time()
+xBPMValues, yBPMValues, sbBPMValues = pv_xysb_values(BPMS)
+end = time.time()
 print (end - start)
 
 print 'Timeit for pvXYSbValues with caget'
-start = timeit.timeit()
+start = time.time()
 xBPMValues, yBPMValues, sbBPMValues = pvXYSbValuesWithCAGet(BPMS)
-end = timeit.timeit()
+end = time.time()
 print (end - start)
 
 p.ylabel('X/Y BPM Values')
