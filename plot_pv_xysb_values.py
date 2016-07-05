@@ -15,11 +15,10 @@ BPMS = ap.getElements('BPM')
 
 
 def bpm_enabled(bpm):
+    ''' Check if BPM is enabled using caget. '''
     pvs = bpm.pv()
-    if ':SA:Y' in pvs[0]:
-        pv_enabled = pvs[0].replace(':SA:Y', ':CF:ENABLED_S')
-    else:
-        pv_enabled = pvs[0].replace(':SA:X', ':CF:ENABLED_S')
+    # Assume that all PVs have the same prefix
+    pv_enabled = '{0}:CF:ENABLED_S'.format(pvs[0].split(':')[0])
     return caget(pv_enabled)
 
 
