@@ -18,7 +18,7 @@ def pv_xysb_values(BPMS):
     x_bpm_values = list()
     y_bpm_values = list()
     sb_bpm_values = list()
-    
+
     for BPM in BPMS:
         # Check if the PV is enabled
         pvs = BPM.pv()
@@ -26,7 +26,7 @@ def pv_xysb_values(BPMS):
             pvEnabled = BPM.pv()[0].replace(':SA:Y', ':CF:ENABLED_S')
         else:
             pvEnabled = BPM.pv()[0].replace(':SA:X', ':CF:ENABLED_S')
-        
+
         # Check if the pv is enabled
         if(caget(pvEnabled)):
             # Get its value and store it in the list
@@ -35,16 +35,16 @@ def pv_xysb_values(BPMS):
             sb_bpm_values.append(BPM.sb)
         else:
             print 'Found a BPM which is not enabled'
-    
+
     return x_bpm_values, y_bpm_values, sb_bpm_values
 
-''' Method to return lists of values for x, y and sb properties of a BPM 
+''' Method to return lists of values for x, y and sb properties of a BPM
     using caget '''
 def pvXYSbValuesWithCAGet(BPMS):
     x_bpm_values = list()
     y_bpm_values = list()
     sb_bpm_values = list()
-    
+
     for BPM in BPMS:
         pvs = BPM.pv()
         if ':SA:Y' in pvs[0]:
@@ -65,7 +65,7 @@ def pvXYSbValuesWithCAGet(BPMS):
                 sb_bpm_values.append(BPM.sb)
         else:
             print "Found a pv value which is not enabled"
-    
+
     x_bpm_values = caget(x_bpm_values)
     y_bpm_values = caget(y_bpm_values)
 
