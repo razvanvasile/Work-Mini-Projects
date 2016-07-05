@@ -13,6 +13,16 @@ ap.machines.load('SRI21')
 # Get all BPMS elements
 BPMS = ap.getElements('BPM')
 
+
+def bpm_enabled(bpm):
+    pvs = bpm.pv()
+    if ':SA:Y' in pvs[0]:
+        pv_enabled = pvs[0].replace(':SA:Y', ':CF:ENABLED_S')
+    else:
+        pv_enabled = pvs[0].replace(':SA:X', ':CF:ENABLED_S')
+    return caget(pv_enabled)
+
+
 def pv_xysb_values(BPMS):
     ''' Method to return lists of values for x, y and sb properties of a BPM '''
     x_bpm_values = list()
@@ -20,15 +30,8 @@ def pv_xysb_values(BPMS):
     sb_bpm_values = list()
 
     for BPM in BPMS:
-        # Check if the PV is enabled
-        pvs = BPM.pv()
-        if ':SA:Y' in pvs[0]:
-            pv_enabled = BPM.pv()[0].replace(':SA:Y', ':CF:ENABLED_S')
-        else:
-            pv_enabled = BPM.pv()[0].replace(':SA:X', ':CF:ENABLED_S')
-
         # Check if the pv is enabled
-        if(caget(pv_enabled)):
+        if(bpm_enabled(BPM)):
             # Get its value and store it in the list
             x_bpm_values.append(BPM.get('x', handle='readback'))
             y_bpm_values.append(BPM.get('y', handle='readback'))
@@ -37,6 +40,7 @@ def pv_xysb_values(BPMS):
             print 'Found a BPM which is not enabled'
 
     return x_bpm_values, y_bpm_values, sb_bpm_values
+
 
 def pv_xysb_values_with_caget(BPMS):
     ''' Method to return lists of values for x, y and sb properties of a BPM
@@ -47,13 +51,8 @@ def pv_xysb_values_with_caget(BPMS):
 
     for BPM in BPMS:
         pvs = BPM.pv()
-        if ':SA:Y' in pvs[0]:
-            pv_enabled = BPM.pv()[0].replace(':SA:Y', ':CF:ENABLED_S')
-        else:
-            pv_enabled = BPM.pv()[0].replace(':SA:X', ':CF:ENABLED_S')
-
         # Check if the pv is enabled
-        if(caget(pv_enabled)):
+        if(bpm_enabled(BPM)):
             # Get its value and store it in the list
             if ':Y' in pvs[0]:
                 y_bpm_values.append(pvs[0])
