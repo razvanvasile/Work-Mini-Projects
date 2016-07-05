@@ -48,10 +48,10 @@ print vmx_pvs - sri21_pvs
 print 'Total difference: {0}.'.format(len(vmx_pvs - sri21_pvs))
 
 # Part 2: Compare computed pv sets with recorded data from files
-added_magnets = get_pvs('added_magnets.txt')
-removed_magnets = get_pvs('removed_magnets.txt')
+added_magnets = get_pvs('data/added_magnets.txt')
+removed_magnets = get_pvs('data/removed_magnets.txt')
 
 print 'Intersection of removed_magnets and sri21_pvs: {0}. Total: {1}.' \
-    .format(set(removed_magnets) & sri21_pvs, len(set(removed_magnets) & sri21_pvs))
+    .format(set(added_magnets) & sri21_pvs, len(set(added_magnets) & sri21_pvs))
 print 'Intersection of added_magnets and vmx_pvs: {0}. Total: {1}.' \
-    .format(set(added_magnets) & vmx_pvs, len(set(added_magnets) & vmx_pvs))
+    .format(set(removed_magnets) & vmx_pvs, len(set(removed_magnets) & vmx_pvs))
