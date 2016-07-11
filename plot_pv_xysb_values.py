@@ -1,17 +1,22 @@
-import pkg_resources
-pkg_resources.require('aphla')
-pkg_resources.require('matplotlib')
-import aphla as ap
-import matplotlib.pyplot as p
-import time
-from cothread.catools import caget, caput
+# This program contains methods to:
+#   - extract x, y and sb values for pvs inside all BPM 
+#     elements using caget and BPM.get().
+#   - plot the x, y BPM coordinates against sb using matplotlib and scisoftpy.
+from pkg_resources import DistributionNotFound
+try:
+    import pkg_resources
+    pkg_resources.require('aphla')
+    import aphla as ap
 
+    # Setup
+    ap.machines.load('SRI21')
+    BPMS = ap.getElements('BPM')
 
-# Load the machine
-ap.machines.load('SRI21')
-
-# Get all BPMS elements
-BPMS = ap.getElements('BPM')
+except (DistributionNotFound, ImportError) as err:
+    print err.errormessage()
+    print ''' Error importing one of the libraries: pkg_resources, aphla. '''
+    import sys
+    sys.exit()
 
 
 def bpm_enabled(bpm):
@@ -69,19 +74,47 @@ def pv_xysb_values_with_caget(BPMS):
 
     return x_bpm_values, y_bpm_values, sb_bpm_values
 
-print 'Timeit for pvXYSbValues'
-start = time.time()
-x_bpm_values, y_bpm_values, sb_bpm_values = pv_xysb_values(BPMS)
-end = time.time()
-print (end - start)
 
-print 'Timeit for pvXYSbValues with caget'
-start = time.time()
-x_bpm_values, y_bpm_values, sb_bpm_values = pv_xysb_values_with_caget(BPMS)
-end = time.time()
-print (end - start)
+def plot_with_scisoftpy():
+    a = dnp.arange(1,10.)
+    b = dnp.arange(3,14.)
+    dnp.plot.line([a,a+12.3]) # plots two lines against array index
+    dnp.plot.line(2*a, [a,a+12.3]) # plots two lines against 2*a
+    dnp.plot.line([2*a, 3.5*b], [a,b]) # plots two lines against defined x values
 
-p.ylabel('X/Y BPM Values')
-p.xlabel('SB BPM Values')
-p.plot(sb_bpm_values, x_bpm_values, 'r', sb_bpm_values, y_bpm_values, 'g')
-p.show()
+def time_function(my_function, my_args):
+    ''' Method to time '''
+    print 'Timing {0}'.format(my_function.__name__)
+    start = time.time()
+    x_bpm_values, y_bpm_values, sb_bpm_values = pv_xysb_values_with_caget(my_args)
+    end = time.time()
+    print (end - start)
+    
+    return x_bpm_values, y_bpm_values, sb_bpm_values
+
+
+try:
+    import numpy
+    import time
+    import matplotlib.pyplot as p
+    import time
+    from cothread.catools import caget
+    print """ Trying to plot the values using Scisoftpy. """
+    import scisoftpy.plot as dpl
+
+    x_bpm_values, y_bpm_values, sb_bpm_values = time_function(pv_xysb_values, BPMS)
+    x_bpm_values, y_bpm_values, sb_bpm_values = time_function(pv_xysb_values_with_caget, BPMS)
+
+    dpl.plot(numpy.array(sb_bpm_values), [numpy.array(x_bpm_values), numpy.array(y_bpm_values)])
+except ImportError as err:
+    print err.errormessage()
+    print """ Scisoftpy was probably not found. Will try using matplotlib. """
+    pkg_resources.require('matplotlib')
+
+    x_bpm_values, y_bpm_values, sb_bpm_values = time_function(pv_xysb_values, BPMS)
+    x_bpm_values, y_bpm_values, sb_bpm_values = time_function(pv_xysb_values_with_caget, BPMS)
+    
+    p.ylabel('X/Y BPM Values')
+    p.xlabel('SB BPM Values')
+    p.plot(sb_bpm_values, x_bpm_values, 'r', sb_bpm_values, y_bpm_values, 'g')
+    p.show()
