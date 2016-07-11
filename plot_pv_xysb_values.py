@@ -107,7 +107,7 @@ try:
 
     dpl.plot(numpy.array(sb_bpm_values), [numpy.array(x_bpm_values), numpy.array(y_bpm_values)])
 except ImportError as err:
-    print err.errormessage()
+    print str(err)
     print """ Scisoftpy was probably not found. Will try using matplotlib. """
     pkg_resources.require('matplotlib')
 
