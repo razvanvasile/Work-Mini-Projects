@@ -15,7 +15,7 @@ print('There are {} BPM elements in the machine.'.format(len(BPMS)))
 # Second task
 print('A list of all the PV names for all BPMS')
 for BPM in range(len(BPMS)):
-    print(BPMS[BPM].pv())
+    print (BPMS[BPM].pv(field='x'))
     print caget(BPMS[BPM].pv())
 
 # Third task
