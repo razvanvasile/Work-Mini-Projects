@@ -86,7 +86,7 @@ def time_function(my_function, my_args):
     ''' Method to time '''
     print 'Timing {0}'.format(my_function.__name__)
     start = time.time()
-    x_bpm_values, y_bpm_values, sb_bpm_values = pv_xysb_values_with_caget(my_args)
+    x_bpm_values, y_bpm_values, sb_bpm_values = my_function(my_args)
     end = time.time()
     print (end - start)
 
