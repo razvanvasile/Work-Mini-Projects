@@ -18,55 +18,65 @@ except (pkg_resources.DistributionNotFound, ImportError) as err:
     sys.exit()
 
 
-def bpm_enabled(bpm):
-    ''' Check if BPM is enabled using caget. '''
-    pvs = bpm.pv()
-    # Assume that all PVs have the same prefix
-    pv_enabled = '{0}:CF:ENABLED_S'.format(pvs[0].split(':')[0])
-    return caget(pv_enabled)
+def bpms_enabled(bpms):
+    ''' Return a list of ones and zeros representing the 
+    BPMs with enabled pv values (0 for enabled, 1 for disabled). '''
+    pvs_enabled = list()
+    for bpm in bpms:
+        pv = bpm.pv()
+        # Assume that all PVs have the same prefix
+        pvs_enabled.append('{0}:CF:ENABLED_S'.format(pv[0].split(':')[0]))
+
+    return caget(pvs_enabled)
 
 
-def pv_xysb_values(BPMS):
+def pv_xysb_values(bpms):
     ''' Method to return lists of values for x, y and sb properties of a BPM '''
     x_bpm_values = list()
     y_bpm_values = list()
     sb_bpm_values = list()
-
-    for BPM in BPMS:
+    
+    enabled_bpms = bpms_enabled(bpms)
+    i = 0
+    for bpm in bpms:
         # Check if the pv is enabled
-        if(bpm_enabled(BPM)):
+        if(enabled_bpms[i] == 1):
             # Get its value and store it in the list
-            x_bpm_values.append(BPM.get('x', handle='readback'))
-            y_bpm_values.append(BPM.get('y', handle='readback'))
-            sb_bpm_values.append(BPM.sb)
+            x_bpm_values.append(bpm.get('x', handle='readback'))
+            y_bpm_values.append(bpm.get('y', handle='readback'))
+            sb_bpm_values.append(bpm.sb)
         else:
             print 'Found a BPM which is not enabled'
+        i += 1
 
     return x_bpm_values, y_bpm_values, sb_bpm_values
 
 
-def pv_xysb_values_with_caget(BPMS):
+def pv_xysb_values_with_caget(bpms):
     ''' Method to return lists of values for x, y and sb properties of a BPM
         using caget '''
     x_bpm_values = list()
     y_bpm_values = list()
     sb_bpm_values = list()
 
-    for BPM in BPMS:
-        pvs = BPM.pv()
+    enabled_bpms = bpms_enabled(bpms)
+    i = 0
+    for bpm in bpms:
+        pvs = bpm.pv()
         # Check if the pv is enabled
-        if(bpm_enabled(BPM)):
+        if(enabled_bpms[i] == 1):
             # Get its value and store it in the list
             if ':Y' in pvs[0]:
                 y_bpm_values.append(pvs[0])
                 x_bpm_values.append(pvs[1])
-                sb_bpm_values.append(BPM.sb)
+                sb_bpm_values.append(bpm.sb)
             else:
                 x_bpm_values.append(pvs[0])
                 y_bpm_values.append(pvs[1])
-                sb_bpm_values.append(BPM.sb)
+                sb_bpm_values.append(bpm.sb)
         else:
             print "Found a pv value which is not enabled"
+        i += 1
 
     x_bpm_values = caget(x_bpm_values)
     y_bpm_values = caget(y_bpm_values)
