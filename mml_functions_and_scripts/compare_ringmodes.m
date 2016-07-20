@@ -3,13 +3,13 @@ function compare_ringmodes
 sri21_channels = get_pv_channels();
 vmx_channels = get_pv_channels();
 
-% sri21_vmx = setdiff(sri21_channels, vmx_channels, 'rows');
-% vmx_sri21 = setdiff(vmx_channels, sri21_channels, 'rows');
-% 
-% fprintf('Here are the results, sri21 - vmx:\n');
-% print_array(sri21_vmx);
-% fprintf('Here are the results, vmx - sri21:\n');
-% print_array(vmx_sri21);
+sri21_vmx = setdiff(sri21_channels, vmx_channels, 'rows');
+vmx_sri21 = setdiff(vmx_channels, sri21_channels, 'rows');
+ 
+fprintf('Here are the results, sri21 - vmx:\n');
+print_array(sri21_vmx);
+fprintf('Here are the results, vmx - sri21:\n');
+print_array(vmx_sri21);
 
 % Part 2: Compare above results with pvs read from files
 added_magnets_path = '../data/added_magnets.txt';
