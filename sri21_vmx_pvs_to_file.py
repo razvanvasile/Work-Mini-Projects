@@ -15,6 +15,6 @@ argv = parser.parse_args()
 
 
 mode_pvs = get_pv_names(argv.mode)
+# File appears to be already sorted, so no need for next line
+# sorted(mode_pvs)
 write_pvs_to_file(argv.filename, mode_pvs)
-
-print argv.filename
