@@ -4,6 +4,7 @@ import pkg_resources
 pkg_resources.require('aphla')
 import aphla as ap
 
+
 def get_pv_names(mode):
     ''' Given a certain ring mode as a string, return all available pvs  '''
     ap.machines.load(mode)
@@ -25,3 +26,10 @@ def get_pvs_from_file(filepath):
         contents = f.read().splitlines()
     return contents
 
+
+def write_pvs_to_file(filename, data):
+    ''' Write given pvs to file '''
+    f = open(filename, 'w')
+    for element in data:
+        f.write(element, '\n')
+    f.close()
