@@ -31,5 +31,5 @@ def write_pvs_to_file(filename, data):
     ''' Write given pvs to file '''
     f = open(filename, 'w')
     for element in data:
-        f.write(element, '\n')
+        f.write(element + '\n')
     f.close()
