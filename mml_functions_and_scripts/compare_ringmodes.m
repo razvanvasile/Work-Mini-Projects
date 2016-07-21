@@ -1,7 +1,7 @@
 function compare_ringmodes
 % Compare PVs for sri21 and vmx ring modes
-sri21_channels = get_all_pv_names();
-vmx_channels = get_all_pv_names();
+sri21_channels = get_all_pv_names('SRI21');
+vmx_channels = get_all_pv_names('VMX');
 
 sri21_vmx = setdiff(sri21_channels, vmx_channels, 'rows');
 vmx_sri21 = setdiff(vmx_channels, sri21_channels, 'rows');
