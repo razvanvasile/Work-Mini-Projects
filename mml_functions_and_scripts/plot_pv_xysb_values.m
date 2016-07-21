@@ -7,13 +7,10 @@ bpmx = getfamilydata('BPMx');
 bpmy = getfamilydata('BPMy');
 bpmx_pvs = getpv('BPMx');
 bpmy_pvs = getpv('BPMy');
-bpmx_pos = bpmx.Position;
-bpmy_pos = bpmy.Position;
+bpmx_pos = getpv('BPMx', 'Position');
+bpmy_pos = getpv('BPMy', 'Position');
 
-bpmx_pvs(end+1:end+2) = 0;
-bpmy_pvs(end+1:end+2) = 0;
-
-% Do the plotting
+% Plot the required values
 figure
 col = hsv(10);
 hold on
