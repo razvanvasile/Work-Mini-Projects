@@ -1,6 +1,6 @@
-function channel_names = get_all_pv_names()
+function channel_names = get_all_pv_names(mode)
 % Method to return a vector of all pv names from a selected machine mode
-    middlelayer mode
+    storageringinit(mode);
     
     data = getfamilydata();
     family_names = fieldnames(data);
