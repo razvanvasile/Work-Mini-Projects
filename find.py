@@ -42,7 +42,7 @@ def parse_user_settings(argv):
 def find_data_on_disk(search_path, search_obj, search_hide):
     ''' Function to find data on disk '''
     p_1 = Popen(["find", search_path, "-name", "*.py"], stdout=PIPE)
-    p_2 = Popen(["xargs", "grep", '-e', '^' + search_obj + search_hide],
+    p_2 = Popen(["xargs", "grep", '-ne', '^' + search_obj + search_hide],
                 stdin=p_1.stdout, stdout=PIPE)
     p_1.stdout.close()
     raw_data = p_2.communicate()[0]
@@ -56,7 +56,8 @@ def parse_data(raw_data):
     raw_data = [line.split(':') for line in raw_data.split('\n')]
     del raw_data[-1]
     for index in range(len(raw_data)):
-        del raw_data[index][2]
+        if len(raw_data[index]) == 4:
+            del raw_data[index][3]
 
     return raw_data
 
@@ -64,8 +65,8 @@ def parse_data(raw_data):
 def print_results(data, search_obj):
     ''' Print (parsed) data to the screen '''
     for line in data:
-        print line[0], '\n', line[1]
-    print 'Total of {0} {1}es found.'.format(len(data), search_obj)
+        print line[0], line[1], '\n', line[2]
+    print 'Total of {0} \'{1}\' objects found.'.format(len(data), search_obj)
 
 
 def main():
