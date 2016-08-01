@@ -45,13 +45,13 @@ def parse_data(raw_data, search_path):
     ''' Parse raw data in a more useful format '''
     raw_data = [line.split(':') for line in raw_data.split('\n')]
     del raw_data[-1]
-    sorted(raw_data)
     if search_path.endswith('/'):
         search_path = search_path[:-1]
     raw_data = [line[0].split(search_path) for line in raw_data]
-    raw_data = [line[1].split('/') for line in raw_data]
     for line in raw_data:
         del line[0]
+    raw_data = [line[0].rsplit('/', 1) for line in raw_data]
+    raw_data = sorted(raw_data)
 
     return raw_data
 
