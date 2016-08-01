@@ -45,6 +45,7 @@ def parse_data(raw_data, search_path):
     ''' Parse raw data in a more useful format '''
     raw_data = [line.split(':') for line in raw_data.split('\n')]
     del raw_data[-1]
+    sorted(raw_data)
     if search_path.endswith('/'):
         search_path = search_path[:-1]
     raw_data = [line[0].split(search_path) for line in raw_data]
@@ -67,6 +68,7 @@ def print_results(data, search_obj):
     for line in paths:
         path_names.append(".".join(line))
 
+    print "{:30s}       {:10s}".format('PACKAGE', 'MODULE')
     for i in range(len(classes)):
         print "{:30s}   |   {:10s}".format(path_names[i], classes[i])
 
