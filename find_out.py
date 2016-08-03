@@ -7,7 +7,7 @@ def create_parser():
     ''' Parse command line arguments: path and search object '''
     parser = argparse.ArgumentParser(description='Location/type of search')
     parser.add_argument("-o", "--object", dest="search_obj",
-                        help="argument type: class, function",
+                        help="argument type: module, package",
                         metavar="OBJECT", default='module')
 
     required_argv = parser.add_argument_group('required arguments')
