@@ -1,5 +1,6 @@
 #!/dls_sw/prod/tools/RHEL6-x86_64/defaults/bin/dls-python
 ''' Display all modules in the APHLA file path '''
+import os
 import argparse
 from subprocess import Popen, PIPE
 
@@ -43,30 +44,31 @@ def find_data_on_disk(search_path, search_obj):
 
 def parse_data(raw_data, search_path):
     ''' Parse raw data in a more useful format '''
-    raw_data = [line.split(':') for line in raw_data.split('\n')]
-    del raw_data[-1]
-    if search_path.endswith('/'):
-        search_path = search_path[:-1]
-    raw_data = [line[0].split(search_path) for line in raw_data]
-    for line in raw_data:
-        del line[0]
-    raw_data = [line[0].rsplit('/', 1) for line in raw_data]
-    raw_data = sorted(raw_data)
+    raw_data = raw_data.strip().split('\n')
+    # Remove search_path from the front of each line
+    raw_data = [line[len(search_path):] if line.startswith(search_path) else line for line in raw_data]
+    # Remove leading slash if present
+    raw_data = [line.lstrip('/') for line in raw_data]
+    # Split into path and filename.
+    raw_data = [os.path.split(line) for line in raw_data]
 
     return raw_data
 
 
 def print_results(data, search_obj):
-    ''' Print (parsed) data to the screen '''
+    ''' Print (parsed) data to the screen.
+        Data is the in the format [(path, module), (path, module),...].
+    '''
+    # Sort
+    data = sorted(data, key=lambda x: x[0])
     paths = []
     classes = []
-    for line in data:
-        paths.append(line[:-1])
-        classes.append(line[-1])
+    for path, module in data:
+        paths.append(path)
+        classes.append(module)
 
-    path_names = []
-    for line in paths:
-        path_names.append(".".join(line))
+    # Print dots between package names (like in python code)
+    path_names = [path.replace('/', '.') for path in paths]
 
     print "{:30s}       {:10s}".format('PACKAGE', 'MODULE')
     for i in range(len(classes)):
