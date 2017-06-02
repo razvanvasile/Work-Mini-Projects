@@ -19,6 +19,12 @@ def main():
         print bpm.get_pv_name('x', 'readback')
         print bpm.get_pv_value('x', 'readback')
 
+    # Third task: Print the setpoint pv value for all quadrupoles.
+    quads = lattice.get_elements('QUAD')
+    for quad in quads:
+        print 'Readback value:{0}'.format(quad.get_pv_value('b1', 'readback'))
+        print 'Setpoint value:{0}'.format(quad.get_pv_value('b1', 'setpoint'))
+
 
 if __name__=='__main__':
     main()
